@@ -2,10 +2,19 @@
   "name": "ngrx-based-state-machine",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky install"
+  },
   "private": true,
   "dependencies": {},
   "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@commitlint/config-nx-scopes": "^17.4.3",
+    "@commitlint/cz-commitlint": "^17.5.0",
+    "commitizen": "^4.3.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.1",
     "nx": "15.9.2"
   },
   "workspaces": [
