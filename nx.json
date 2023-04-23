@@ -38,5 +38,6 @@
         "{workspaceRoot}/.eslintignore"
       ]
     }
-  }
+  },
+  "defaultProject": "showcase"
 }

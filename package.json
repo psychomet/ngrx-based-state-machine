@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "start": "nx serve showcase"
+    "start": "nx serve"
   },
   "private": true,
   "dependencies": {
