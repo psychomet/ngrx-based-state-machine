@@ -1,6 +1,6 @@
 # ngrx-fsm
 
-**NGRX BASED STATE MACHINE**
+**NGRX BASED FINITE STATE MACHINE**
 
 This library was generated with [Nx](https://nx.dev).
 
