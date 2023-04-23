@@ -15,6 +15,9 @@ import {
   componentStateReducer,
   ComponentStateService,
 } from 'ngrx-fsm';
+import { importProvidersFrom } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -23,6 +26,7 @@ bootstrapApplication(AppComponent, {
       [COMPONENT_STATE_FEATURE_KEY]: componentStateReducer,
     }),
     provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
+    importProvidersFrom(BrowserAnimationsModule, HttpClientModule),
     ComponentStateFacade,
     ComponentStateBuilder,
     ComponentStateService,

@@ -1,1 +1,27 @@
-<p>users works!</p>
+<div class="update-users">
+  <button (click)="init()">Init Users</button>
+  <button (click)="reIndex()">ReIndex Users</button>
+  <div class="spinner" *ngIf="processing$ | async">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>
+</div>
+<table class="table-auto">
+  <thead>
+    <tr>
+      <th>FirstName</th>
+      <th>LastName</th>
+      <th>UserName</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users$ | async">
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+    </tr>
+  </tbody>
+</table>

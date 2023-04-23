@@ -1,7 +1,6 @@
+import { UserInterface } from '../types';
+
 /**
  * Interface for the 'Users' data
  */
-export interface UsersEntity {
-  id: string | number; // Primary ID
-  name: string;
-}
+export interface UsersEntity extends UserInterface {}

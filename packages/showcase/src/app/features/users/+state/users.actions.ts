@@ -12,3 +12,5 @@ export const loadUsersFailure = createAction(
   '[Users/API] Load Users Failure',
   props<{ error: any }>()
 );
+
+export const reIndexUsers = createAction('[Users Page] ReIndex');

@@ -1,5 +1,5 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { createReducer, on, Action } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import * as UsersActions from './users.actions';
 import { UsersEntity } from './users.models';
@@ -31,6 +31,9 @@ const reducer = createReducer(
     loaded: false,
     error: null,
   })),
+  on(UsersActions.reIndexUsers, (state) =>
+    usersAdapter.setAll([], { ...state, loaded: false, error: null })
+  ),
   on(UsersActions.loadUsersSuccess, (state, { users }) =>
     usersAdapter.setAll(users, { ...state, loaded: true })
   ),
