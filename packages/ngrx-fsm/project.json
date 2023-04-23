@@ -10,7 +10,6 @@
       "executor": "@nrwl/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "allowedCommonJsDependencies": ["lodash"],
         "project": "packages/ngrx-fsm/ng-package.json"
       },
       "configurations": {
