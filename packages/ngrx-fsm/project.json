@@ -1,0 +1,50 @@
+{
+  "name": "ngrx-fsm",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/ngrx-fsm/src",
+  "prefix": "app",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "packages/ngrx-fsm/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/ngrx-fsm/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/ngrx-fsm/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/ngrx-fsm/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/ngrx-fsm/**/*.ts",
+          "packages/ngrx-fsm/**/*.html"
+        ]
+      }
+    }
+  }
+}
