@@ -3,5 +3,6 @@
   "dest": "../../dist/packages/ngrx-fsm",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["angular", "@ngrx/store"]
 }
