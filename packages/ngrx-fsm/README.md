@@ -82,6 +82,10 @@ const componentStates = this.componentStateBuilder
 this.componentStateService.addComponentStates(componentStates);
 ```
 
-## [Demo was a better approach](https://stackblitz.com/edit/ng-met-antd-datepicker)
+## Demo was a better approach
 
-So, here it state machine in action at: [Stackblitz Demo](https://stackblitz.com/edit/ng-met-antd-datepicker)
+So, run showcase project on stackblitz WIP you can clone a repo then:
+
+Run `yarn strt` to execute the showcase demo.
+
+[//]: # 'So, here it state machine in action at: [Stackblitz Demo](https://stackblitz.com/edit/ng-met-antd-datepicker)'
