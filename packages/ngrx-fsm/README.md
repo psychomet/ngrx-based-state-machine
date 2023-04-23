@@ -1,5 +1,7 @@
 # ngrx-fsm
 
+**NGRX BASED STATE MACHINE**
+
 This library was generated with [Nx](https://nx.dev).
 
 Creating a Finite State Machine for handling component state in an Angular app.
@@ -86,6 +88,6 @@ this.componentStateService.addComponentStates(componentStates);
 
 So, run showcase project on stackblitz WIP you can clone a repo then:
 
-Run `yarn strt` to execute the showcase demo.
+Run `yarn start` to execute the showcase demo.
 
 [//]: # 'So, here it state machine in action at: [Stackblitz Demo](https://stackblitz.com/edit/ng-met-antd-datepicker)'
