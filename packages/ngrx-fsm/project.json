@@ -46,6 +46,14 @@
           "packages/ngrx-fsm/**/*.html"
         ]
       }
+    },
+    "release": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "npx semantic-release-plus --extends ./packages/ngrx-fsm/release.config.js",
+        "parallel": false
+      }
     }
   }
 }

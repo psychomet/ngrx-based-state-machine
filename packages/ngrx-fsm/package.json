@@ -1,6 +1,15 @@
 {
   "name": "ngrx-fsm",
-  "version": "0.0.1",
+  "version": "0.0.0-semantic-release",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psychomet/ngrx-based-state-machine.git",
+    "directory": "packages/ngrx-fsm"
+  },
+  "publishConfig": {
+    "@psychomet:registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
   "peerDependencies": {
     "@angular/common": "^15.0.1",
     "@angular/core": "^15.0.1",
