@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.0...ngrx-fsm-v1.0.1) (2023-04-23)
+
+
+### Bug Fixes
+
+* **ngrx-fsm:** added loadash to allowedNonPeerDependencies ([afb18ee](https://github.com/psychomet/ngrx-based-state-machine/commit/afb18eedaece0f2b5c2ffe516dbb45932e2dde33))
+
 # 1.0.0 (2023-04-23)
 
 
