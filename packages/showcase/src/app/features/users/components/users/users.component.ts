@@ -18,7 +18,7 @@ import { UserInterface } from '../../types';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent {
   processing$!: Observable<boolean>;
   users$: Observable<UserInterface[]> = this.store.pipe(
     select(UsersSelectors.selectAllUsers)
@@ -62,10 +62,6 @@ export class UsersComponent implements OnInit {
           componentState === ComponentStateEnum.Processing
       )
     );
-  }
-
-  ngOnInit() {
-    this.users$.subscribe((users) => console.log('users', users));
   }
 
   init() {
