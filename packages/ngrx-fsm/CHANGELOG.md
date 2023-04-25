@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.3...ngrx-fsm-v1.0.4) (2023-04-25)
+
+
+### Bug Fixes
+
+* **ngrx-fsm:** update keywords ([adf0d4a](https://github.com/psychomet/ngrx-based-state-machine/commit/adf0d4a8b8edfa17ad9413714e7e26612a4ad3a2))
+
 ## [1.0.3](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.2...ngrx-fsm-v1.0.3) (2023-04-23)
 
 
