@@ -1,9 +1,8 @@
 ## [1.0.2](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.1...ngrx-fsm-v1.0.2) (2023-04-23)
 
-
 ### Bug Fixes
 
-* **ngrx-fsm:** add lodash to peerDependencies ([09a6ef9](https://github.com/psychomet/ngrx-based-state-machine/commit/09a6ef98f30a833365800e3111e187ff96785088))
+- **ngrx-fsm:** add lodash to peerDependencies ([09a6ef9](https://github.com/psychomet/ngrx-based-state-machine/commit/09a6ef98f30a833365800e3111e187ff96785088))
 
 ## [1.0.1](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.0...ngrx-fsm-v1.0.1) (2023-04-23)
 

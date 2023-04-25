@@ -1,6 +1,14 @@
 {
   "name": "ngrx-fsm",
   "version": "0.0.0-semantic-release",
+  "keywords": [
+    "angular",
+    "ngrx",
+    "fsm",
+    "bpmn",
+    "finite-state-machine",
+    "process-definition"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/psychomet/ngrx-based-state-machine.git",
