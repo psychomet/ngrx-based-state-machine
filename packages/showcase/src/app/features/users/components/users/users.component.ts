@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { select, Store } from '@ngrx/store';
 import {
@@ -13,9 +13,9 @@ import { filter, map, Observable } from 'rxjs';
 import { UserInterface } from '../../types';
 
 @Component({
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './users.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent {

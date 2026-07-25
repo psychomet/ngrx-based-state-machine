@@ -11,29 +11,29 @@
       </li>
       <li>2.Then click ReIndex action for refetch data</li>
     </ul>
-    <progress
-      class="progress w-56 mx-auto"
-      *ngIf="processing$ | async; else tableTmpl"
-    ></progress>
-    <ng-template #tableTmpl>
-      <table class="table-auto table w-full">
-        <thead>
-          <tr>
-            <th>FirstName</th>
-            <th>LastName</th>
-            <th>UserName</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users$ | async">
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </ng-template>
+    @if (processing$ | async) {
+    <progress class="progress w-56 mx-auto"></progress>
+    } @else {
+    <table class="table-auto table w-full">
+      <thead>
+        <tr>
+          <th>FirstName</th>
+          <th>LastName</th>
+          <th>UserName</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users$ | async; track user) {
+        <tr>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
   </div>
 </div>

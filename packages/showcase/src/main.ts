@@ -15,12 +15,13 @@ import {
   componentStateReducer,
   ComponentStateService,
 } from 'ngrx-fsm';
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideZoneChangeDetection(),
     provideEffects(),
     provideStore({
       [COMPONENT_STATE_FEATURE_KEY]: componentStateReducer,
