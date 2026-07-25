@@ -18,11 +18,12 @@ import {
 import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { TelemetryEffects } from './app/telemetry/telemetry.effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
-    provideEffects(),
+    provideEffects(TelemetryEffects),
     provideStore({
       [COMPONENT_STATE_FEATURE_KEY]: componentStateReducer,
     }),

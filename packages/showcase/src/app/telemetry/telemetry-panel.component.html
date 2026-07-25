@@ -1,0 +1,67 @@
+<section
+  class="bg-base-100 rounded-box shadow-sm overflow-hidden flex flex-col h-[28rem]"
+>
+  <header
+    class="px-4 py-3 border-b border-base-200 flex items-center justify-between gap-3"
+  >
+    <div>
+      <h2 class="font-semibold text-sm">FSM telemetry</h2>
+      <p class="text-xs opacity-60">
+        Live transitions across showcase use cases
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="badge badge-sm badge-outline">{{ telemetry.count() }}</span>
+      <button
+        type="button"
+        class="btn btn-xs"
+        (click)="telemetry.togglePaused()"
+      >
+        {{ telemetry.paused() ? 'Resume' : 'Pause' }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-xs btn-ghost"
+        (click)="telemetry.clear()"
+      >
+        Clear
+      </button>
+    </div>
+  </header>
+
+  <div class="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
+    @if (telemetry.events().length === 0) {
+    <p class="text-xs opacity-60 px-1 py-6 text-center">
+      Interact with a use case to see transitions here.
+    </p>
+    } @else { @for (event of telemetry.events(); track event.id) {
+    <article
+      class="rounded-lg border border-base-200 bg-base-200/40 px-3 py-2 space-y-1"
+    >
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-medium truncate">{{ event.useCase }}</span>
+        <span class="text-[10px] opacity-50 shrink-0">
+          {{ event.at | date : 'HH:mm:ss.SSS' }}
+        </span>
+      </div>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="badge badge-sm" [ngClass]="modeClass(event.mode)">
+          {{ event.mode }}
+        </span>
+        <span class="font-mono text-xs">
+          {{ event.from }}
+          <span class="opacity-50">→</span>
+          {{ event.to }}
+        </span>
+      </div>
+      <div class="text-xs opacity-70 truncate" [title]="event.triggeredBy">
+        {{ shortAction(event.triggeredBy) }}
+        <span class="opacity-50">· {{ event.componentName }}</span>
+        @if (event.componentStateId != null) {
+        <span class="opacity-50">· id {{ event.componentStateId }}</span>
+        }
+      </div>
+    </article>
+    } }
+  </div>
+</section>

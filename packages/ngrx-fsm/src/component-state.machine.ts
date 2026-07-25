@@ -54,12 +54,24 @@ export class ComponentStateMachine extends ActionsSubject {
             : ComponentStateEnum.Idle;
           const stateTransition = stateMachine[key][currentState];
           if (stateTransition && this.checkValidTransition(action, value.id)) {
-            // set the new state from the given component
             const newState = stateTransition.to;
+            const mode = stateTransition.terminate
+              ? 'terminate'
+              : stateTransition.action ===
+                ComponentStateActions.passthroughComponentState
+              ? 'passthrough'
+              : stateTransition.action
+              ? 'transform'
+              : 'unknown';
+
             super.next(
               ComponentStateActions.updateComponentState({
                 componentName: key,
                 componentState: newState,
+                previousState: currentState,
+                triggeredBy: action.type,
+                mode,
+                componentStateId: value.id ?? action.componentStateId,
               })
             );
             if (stateTransition.action) {
@@ -81,6 +93,15 @@ export class ComponentStateMachine extends ActionsSubject {
                 super.next(transitionAction);
               }
             }
+          } else if (this.checkValidTransition(action, value.id)) {
+            super.next(
+              ComponentStateActions.componentStateTransitionBlocked({
+                componentName: key,
+                previousState: currentState,
+                triggeredBy: action.type,
+                componentStateId: value.id ?? action.componentStateId,
+              })
+            );
           }
         }
       });

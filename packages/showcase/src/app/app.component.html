@@ -7,8 +7,8 @@
     </div>
   </header>
 
-  <div class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-    <aside class="lg:w-72 shrink-0">
+  <div class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-8">
+    <aside class="xl:w-72 shrink-0">
       <ul class="menu bg-base-100 rounded-box shadow-sm p-2">
         @for (link of links; track link.path) {
         <li>
@@ -30,5 +30,9 @@
         <router-outlet></router-outlet>
       </div>
     </main>
+
+    <aside class="xl:w-96 shrink-0">
+      <app-telemetry-panel />
+    </aside>
   </div>
 </div>

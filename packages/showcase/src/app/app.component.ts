@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TelemetryPanelComponent } from './telemetry/telemetry-panel.component';
 
 @Component({
-  imports: [RouterModule],
+  imports: [RouterModule, TelemetryPanelComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
