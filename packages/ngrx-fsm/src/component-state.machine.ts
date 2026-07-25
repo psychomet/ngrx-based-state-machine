@@ -1,6 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
 import { Store, ActionsSubject } from '@ngrx/store';
-import { forOwn, filter } from 'lodash';
 import { take } from 'rxjs/operators';
 
 import { ComponentStateService } from './component-state.service';
@@ -45,16 +44,16 @@ export class ComponentStateMachine extends ActionsSubject {
         const stateMachine =
           this._componentStateService.componentStates[action.type];
         let actionForwarded = false;
-        forOwn(stateMachine, (value, key) => {
+        for (const [key, value] of Object.entries(stateMachine) as [
+          string,
+          any
+        ][]) {
           // for each entry check what the current state of the component is
           const currentState = componentState[key]
             ? componentState[key]
             : ComponentStateEnum.Idle;
           const stateTransition = stateMachine[key][currentState];
-          if (
-            stateTransition &&
-            this.checkValidTransition(action.payload, value.id)
-          ) {
+          if (stateTransition && this.checkValidTransition(action, value.id)) {
             // set the new state from the given component
             const newState = stateTransition.to;
             super.next(
@@ -65,9 +64,9 @@ export class ComponentStateMachine extends ActionsSubject {
             );
             if (stateTransition.action) {
               // process the action by either transforming to another action or passing through
-              const args = filter(action, (param: any, paramKey: any) => {
-                return paramKey !== 'type';
-              });
+              const args = Object.keys(action)
+                .filter((paramKey) => paramKey !== 'type')
+                .map((paramKey) => action[paramKey]);
 
               const transitionAction = stateTransition.action(...args);
               if (
@@ -83,17 +82,18 @@ export class ComponentStateMachine extends ActionsSubject {
               }
             }
           }
-        });
+        }
       });
   }
 
-  private checkValidTransition(actionPayload: any, transitionId: number) {
+  private checkValidTransition(action: any, transitionId?: string | number) {
+    const componentStateId =
+      action?.componentStateId ?? action?.payload?.componentStateId;
+
     return (
-      !actionPayload ||
-      !actionPayload.componentStateId ||
-      (actionPayload.componentStateId && !transitionId) ||
-      (actionPayload.componentStateId &&
-        transitionId === actionPayload.componentStateId)
+      componentStateId == null ||
+      transitionId == null ||
+      transitionId === componentStateId
     );
   }
 }

@@ -1,20 +1,27 @@
-<div class="container mt-20">
-  <div class="w-full flex flex-col gap-14 mx-auto">
-    <div class="flex gap-4">
-      <button class="btn" (click)="init()">Init Users</button>
-      <button class="btn btn-accent" (click)="reIndex()">ReIndex Users</button>
-    </div>
-    <ul>
-      <li>
-        1.First click Init action list (after initial data init action is not
-        valid)
-      </li>
-      <li>2.Then click ReIndex action for refetch data</li>
-    </ul>
-    @if (processing$ | async) {
-    <progress class="progress w-56 mx-auto"></progress>
-    } @else {
-    <table class="table-auto table w-full">
+<div class="flex flex-col gap-6">
+  <div>
+    <h1 class="text-2xl font-semibold">List lifecycle</h1>
+    <p class="opacity-70 mt-1">
+      Classic Idle → Processing → Completed flow. After init completes, only
+      ReIndex is a valid next action.
+    </p>
+  </div>
+
+  <div class="flex gap-4">
+    <button class="btn" (click)="init()">Init Users</button>
+    <button class="btn btn-accent" (click)="reIndex()">ReIndex Users</button>
+  </div>
+
+  <ul class="text-sm opacity-80 list-disc pl-5 space-y-1">
+    <li>First click Init (after success, Init is no longer valid)</li>
+    <li>Then click ReIndex to refetch from Completed</li>
+  </ul>
+
+  @if (processing$ | async) {
+  <progress class="progress w-56"></progress>
+  } @else {
+  <div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
       <thead>
         <tr>
           <th>FirstName</th>
@@ -24,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (user of users$ | async; track user) {
+        @for (user of users$ | async; track user.id) {
         <tr>
           <td>{{ user.first_name }}</td>
           <td>{{ user.last_name }}</td>
@@ -34,6 +41,6 @@
         }
       </tbody>
     </table>
-    }
   </div>
+  }
 </div>

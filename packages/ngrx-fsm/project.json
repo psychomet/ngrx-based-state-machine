@@ -12,7 +12,6 @@
       "defaultConfiguration": "production",
       "options": {
         "project": "packages/ngrx-fsm/ng-package.json",
-        "updateBuildableProjectDepsInPackageJson": true,
         "tsConfig": "packages/ngrx-fsm/tsconfig.lib.json"
       },
       "configurations": {

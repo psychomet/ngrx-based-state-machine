@@ -1,0 +1,44 @@
+<div class="flex flex-col gap-6">
+  <div>
+    <h1 class="text-2xl font-semibold">Multi-instance cards</h1>
+    <p class="opacity-70 mt-1">
+      Each card owns its own FSM via
+      <code class="text-sm">withId()</code>. Loading one card does not block the
+      others, even though they share the same action types.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    @for (id of cardIds; track id) {
+    <div class="card bg-base-200">
+      <div class="card-body gap-3">
+        <h2 class="card-title text-base">Card #{{ id }}</h2>
+        <p class="text-xs opacity-60">
+          State:
+          <span class="badge badge-sm">{{ state$(id) | async }}</span>
+        </p>
+
+        @if ((state$(id) | async) === ComponentStateEnum.Processing) {
+        <progress class="progress w-full"></progress>
+        } @else if ((state$(id) | async) === ComponentStateEnum.Retry) {
+        <div class="alert alert-warning text-sm py-2">
+          <span>{{ error$(id) | async }}</span>
+        </div>
+        <button class="btn btn-sm btn-warning" (click)="retry(id)">
+          Retry
+        </button>
+        } @else if (user$(id) | async; as user) {
+        <div class="text-sm space-y-1">
+          <p class="font-medium">{{ user.first_name }} {{ user.last_name }}</p>
+          <p class="opacity-70">@{{ user.username }}</p>
+          <p class="opacity-70 break-all">{{ user.email }}</p>
+        </div>
+        } @else {
+        <p class="text-sm opacity-60">No data yet.</p>
+        <button class="btn btn-sm btn-primary" (click)="load(id)">Load</button>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

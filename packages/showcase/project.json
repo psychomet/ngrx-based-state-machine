@@ -55,17 +55,17 @@
       "continuous": true,
       "configurations": {
         "production": {
-          "browserTarget": "showcase:build:production"
+          "buildTarget": "showcase:build:production"
         },
         "development": {
-          "browserTarget": "showcase:build:development"
+          "buildTarget": "showcase:build:development"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "showcase:build"
+        "buildTarget": "showcase:build"
       }
     },
     "lint": {

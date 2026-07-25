@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { forOwn, isEmpty } from 'lodash';
 import * as ComponentStateActions from './+state/component-state.actions';
 import { ComponentStateState } from './+state/component-state.reducer';
 import { ComponentStateEnum } from './component-state.enum';
@@ -16,7 +15,10 @@ export class ComponentStateService {
 
   public addComponentStates(componentStateData: any) {
     this.deleteComponentState(componentStateData.name);
-    forOwn(componentStateData.states, (value: any, key: string) => {
+    for (const [key, value] of Object.entries(componentStateData.states) as [
+      string,
+      any
+    ][]) {
       if (!this.componentStates[key]) {
         this.componentStates[key] = {};
       }
@@ -26,18 +28,19 @@ export class ComponentStateService {
         }
         this.componentStates[key][componentStateData.name] = value;
       }
-    });
+    }
   }
 
   public removeComponentStates(componentName: string) {
-    forOwn(this.componentStates, (value: any, key: string) => {
+    for (const key of Object.keys(this.componentStates)) {
+      const value = this.componentStates[key];
       if (value[componentName]) {
         delete this.componentStates[key][componentName];
       }
-      if (isEmpty(this.componentStates[key])) {
+      if (Object.keys(this.componentStates[key]).length === 0) {
         delete this.componentStates[key];
       }
-    });
+    }
     this.deleteComponentState(componentName);
   }
 

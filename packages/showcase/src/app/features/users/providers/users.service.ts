@@ -1,25 +1,45 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserInterface } from '../types';
 import { map, tap } from 'rxjs';
+
+interface DummyJsonUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+}
+
+interface DummyJsonUsersResponse {
+  users: DummyJsonUser[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  constructor(private httpClient: HttpClient) {}
+  private httpClient = inject(HttpClient);
 
   getUsers() {
     return this.httpClient
-      .get<UserInterface[]>(
-        'https://random-data-api.com/api/users/random_user?size=3'
+      .get<DummyJsonUsersResponse>(
+        'https://dummyjson.com/users?limit=3&select=id,firstName,lastName,username,email'
       )
       .pipe(
         tap(() => console.log('fetch users action received')),
-        map((users) => {
-          console.log('fetch users action successful');
-          return users;
-        })
+        map((response) =>
+          response.users.map(
+            (user): UserInterface => ({
+              id: user.id,
+              first_name: user.firstName,
+              last_name: user.lastName,
+              username: user.username,
+              email: user.email,
+            })
+          )
+        ),
+        tap(() => console.log('fetch users action successful'))
       );
   }
 }

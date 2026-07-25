@@ -1,4 +1,3 @@
-import { forOwn } from 'lodash';
 import { Injectable } from '@angular/core';
 
 import { passthroughComponentState } from './+state/component-state.actions';
@@ -100,15 +99,15 @@ export class ComponentStateBuilder {
     return this._componentStates;
   }
 
-  public validate(states: any) {
-    forOwn(states, (value: any, key: string) => {
-      forOwn(value, (actionValue: any, actionKey: string) => {
+  public validate(states: Record<string, ActionState>) {
+    for (const [key, value] of Object.entries(states)) {
+      for (const actionValue of Object.values(value)) {
         if (!actionValue.action && !actionValue.terminate) {
           throw new Error(
             `The component state change for ${key} is missing a passthrough, transform, or terminate flag`
           );
         }
-      });
-    });
+      }
+    }
   }
 }
