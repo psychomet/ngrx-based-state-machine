@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { select, Store } from '@ngrx/store';
 import {
@@ -15,19 +15,22 @@ import { UserInterface } from '../../types';
 @Component({
   imports: [CommonModule],
   templateUrl: './users.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent {
+  private readonly componentStateService = inject(ComponentStateService);
+  private readonly componentStateBuilder = inject(ComponentStateBuilder);
+  private readonly store = inject(
+    Store<{ componentState: ComponentStateState }>
+  );
+
   processing$!: Observable<boolean>;
   users$: Observable<UserInterface[]> = this.store.pipe(
     select(UsersSelectors.selectAllUsers)
   );
-  constructor(
-    private componentStateService: ComponentStateService,
-    private componentStateBuilder: ComponentStateBuilder,
-    private store: Store<{ componentState: ComponentStateState }>
-  ) {
+
+  constructor() {
     const componentName = UsersComponent.name;
     const componentStates = this.componentStateBuilder
       .create(componentName)

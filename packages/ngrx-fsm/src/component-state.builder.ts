@@ -17,7 +17,7 @@ export interface ActionState {
 
 export interface Transition {
   to?: ComponentStateEnum;
-  action?: Function;
+  action?: (...args: unknown[]) => { type: string };
   terminate?: boolean;
 }
 
@@ -76,7 +76,7 @@ export class ComponentStateBuilder {
   public passThrough() {
     this._componentStates.states[this._currentAction][
       this._currentFromState
-    ].action = passthroughComponentState;
+    ].action = passthroughComponentState as Transition['action'];
     return this;
   }
 
@@ -87,7 +87,7 @@ export class ComponentStateBuilder {
     return this;
   }
 
-  public transformTo(action: Function) {
+  public transformTo(action: (...args: unknown[]) => { type: string }) {
     this._componentStates.states[this._currentAction][
       this._currentFromState
     ].action = action;

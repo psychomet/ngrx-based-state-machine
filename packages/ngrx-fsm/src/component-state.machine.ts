@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { Store, ActionsSubject } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 
@@ -9,19 +9,17 @@ import { ComponentStateEnum } from './component-state.enum';
 
 @Injectable()
 export class ComponentStateMachine extends ActionsSubject {
+  private readonly injector = inject(Injector);
   private _store!: Store<{ componentState: ComponentStateState }>;
   private _componentStateService!: ComponentStateService;
 
-  constructor(private _injector: Injector) {
-    super();
-  }
   public override next(action: any) {
     if (!this._store) {
       this._store = <Store<{ componentState: ComponentStateState }>>(
-        this._injector.get(Store)
+        this.injector.get(Store)
       );
       this._componentStateService = <ComponentStateService>(
-        this._injector.get(ComponentStateService)
+        this.injector.get(ComponentStateService)
       );
     }
     // check if the any components have registered an interest in this component

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { select, Store, Action } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 
 import * as ComponentStateSelectors from './+state/component-state.selectors';
 import { map } from 'rxjs/operators';

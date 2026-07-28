@@ -57,7 +57,8 @@
       <div class="text-xs opacity-70 truncate" [title]="event.triggeredBy">
         {{ shortAction(event.triggeredBy) }}
         <span class="opacity-50">· {{ event.componentName }}</span>
-        @if (event.componentStateId != null) {
+        @if (event.componentStateId !== null && event.componentStateId !==
+        undefined) {
         <span class="opacity-50">· id {{ event.componentStateId }}</span>
         }
       </div>

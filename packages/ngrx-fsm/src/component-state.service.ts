@@ -11,8 +11,6 @@ export class ComponentStateService {
   );
   public componentStates: any = {};
 
-  constructor() {}
-
   public addComponentStates(componentStateData: any) {
     this.deleteComponentState(componentStateData.name);
     for (const [key, value] of Object.entries(componentStateData.states) as [
