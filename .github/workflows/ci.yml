@@ -6,118 +6,87 @@ on:
       - master
   pull_request:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   HUSKY: 0
+  NX_DAEMON: false
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}
-    strategy:
-      matrix:
-        node-version: [16]
-        npm-version: [8]
-        yarn-version: ['1.22.x']
-        pnpm-version: [7]
     steps:
-      - name: Checkout [Pull Request]
-        uses: actions/checkout@v2
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 0
+          filter: tree:0
+          # Prefer a PAT when available so nx-set-shas can read workflow history.
+          token: ${{ secrets.GH_TOKEN || github.token }}
 
-      - name: Checkout [Default Branch]
-        uses: actions/checkout@v2
-        if: ${{ github.event_name != 'pull_request' }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          fetch-depth: 0
+          node-version: 22
+          cache: yarn
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v2
-        with:
-          main-branch-name: ${{ github.base_ref }}
-
-      - name: Detect package manager
-        id: package_manager
-        run: |
-          echo "::set-output name=name::$([[ -f ./yarn.lock ]] && echo "yarn" || ([[ -f ./pnpm-lock.yaml ]] && echo "pnpm") || echo "npm")"
-      - name: Set node/npm/yarn versions using volta
-        uses: volta-cli/action@v4.0.0
-        with:
-          node-version: '${{ matrix.node-version }}'
-          npm-version: '${{ matrix.npm-version }}'
-          yarn-version: '${{ matrix.yarn-version }}'
-
-      - name: Install PNPM
-        if: steps.package_manager.outputs.name == 'pnpm'
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: '${{ matrix.pnpm-version }}'
-
-      - name: Print node/npm/yarn/pnpm versions
-        id: versions
-        run: |
-          node_ver=$( node --version )
-          yarn_ver=$( yarn --version || true )
-          pnpm_ver=$( pnpm --version || true )
-          echo "Node: ${node_ver:1}"
-          echo "NPM: $(npm --version )"
-          if [[ $yarn_ver != '' ]]; then echo "Yarn: $yarn_ver"; fi
-          if [[ $pnpm_ver != '' ]]; then echo "PNPM: $pnpm_ver"; fi
-          echo "::set-output name=node_version::${node_ver:1}"
-      - name: Use the node_modules cache if available [npm]
-        if: steps.package_manager.outputs.name == 'npm'
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-
-      - name: Use the node_modules cache if available [pnpm]
-        if: steps.package_manager.outputs.name == 'pnpm'
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-
-      - name: Get yarn cache directory path
-        if: steps.package_manager.outputs.name == 'yarn'
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Use the node_modules cache if available [yarn]
-        if: steps.package_manager.outputs.name == 'yarn'
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ steps.versions.outputs.node_version }}-
       - name: Install dependencies
-        run: |
-          if [ "${{ steps.package_manager.outputs.name == 'yarn' }}" == "true" ]; then
-            echo "Running yarn install --frozen-lockfile"
-            yarn install --frozen-lockfile
-          elif [ "${{ steps.package_manager.outputs.name == 'pnpm' }}" == "true" ]; then
-            echo "Running pnpm install --frozen-lockfile"
-            pnpm install --frozen-lockfile
-          else
-            echo "Running npm ci"
-            npm ci
-          fi
-      - run: |  
-          npx nx run ngrx-fsm:build
+        run: yarn install --frozen-lockfile
+
+      - name: Derive SHAs for nx affected
+        uses: nrwl/nx-set-shas@v5
+        with:
+          main-branch-name: master
+
+      - name: Lint affected
+        run: yarn nx affected -t lint --parallel=3
+
+      - name: Test affected
+        run: yarn nx affected -t test --parallel=3 --configuration=ci
+
+      - name: Build affected
+        run: yarn nx affected -t build --parallel=3
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN || github.token }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build library
+        run: yarn nx run ngrx-fsm:build
+
       - name: Release
-        if: ${{ success() && (github.event_name != 'pull_request' || github.event.action == 'closed' && github.event.pull_request.merged == true) }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npx nx run ngrx-fsm:release
-          npx semantic-release-plus
+          yarn nx run ngrx-fsm:release
+          yarn semantic-release-plus

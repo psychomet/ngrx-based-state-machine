@@ -1,41 +1,86 @@
 # ngrx-fsm
 
-**NGRX BASED FINITE STATE MACHINE**
+**NgRx-based finite state machine for Angular component UI state.**
 
-This library was generated with [Nx](https://nx.dev).
+Register allowed action → state transitions per component. As NgRx actions flow through the store, the machine validates them against that map:
 
-Creating a Finite State Machine for handling component state in an Angular app.
+- **Valid** → update the component’s state in a dedicated store slice, then optionally forward the action
+- **Invalid** → drop the action (and emit a blocked-transition signal for telemetry)
 
-We were finding the use of boolean flags to dictate which state a particular component was in was ok at a very simple level, but as the app grew, and more complex components were added, it didn't scale well.
+This scales better than boolean flags (`isLoading`, `isOpen`, `canSubmit`, …) once components grow multiple UI modes.
 
-What we wanted was a way of components registering a map of valid transitions. Then as actions are emitted they are checked against this map. If valid, the components current state is updated in a special UIState slice of the store and the action is passed trough. If not a valid transition for the given component the action is dropped. For example:
+## Why
 
-- An 'Add Book' component, can be in a state of Idle, Processing, or Errored
-- An AddBookAction causes it to transition from Idle to Processing.
-- This transition is only allowed if the component is currently Idle. If the component is Processing then the transition should be disallowed
+At a small scale, booleans are fine. As flows grow (idle → processing → success/retry, expandable panels, parallel cards), booleans become combinatorial and easy to misuse.
 
-### 🎰 Working with a state machine
+`ngrx-fsm` keeps a **single current state per component** and a **transition table** so illegal actions never reach effects/reducers.
 
-<p align="center">
-  <a href="http://ng.ant.design">
-    <img src="https://krasimirtsonev.com/blog/article/managing-state-in-javascript-with-state-machines-stent/assets/table.jpg">
-  </a>
-</p>
+Example:
 
-### 📦 Installation
+| Current state | Action  | Allowed? | Next state  |
+| ------------- | ------- | -------- | ----------- |
+| Idle          | Init    | yes      | Processing  |
+| Processing    | Init    | no       | _(blocked)_ |
+| Processing    | Success | yes      | Completed   |
+| Completed     | ReIndex | yes      | Processing  |
 
-**We recommend using `@angular/cli` to install**. It not only makes development easier, but also allows you to take advantage of the rich ecosystem of angular packages and tooling.
+## Concepts
 
-```bash
-$ ng new PROJECT_NAME
-$ cd PROJECT_NAME
-$ yarn add @ngrx/store
-$ yarn add ngrx-fsm
-```
+| Piece                   | Role                                               |
+| ----------------------- | -------------------------------------------------- |
+| `ComponentStateBuilder` | Fluent API to declare transitions                  |
+| `ComponentStateService` | Registers / unregisters machines; can set state    |
+| `ComponentStateMachine` | Custom `ActionsSubject` that intercepts actions    |
+| `componentStateReducer` | Store slice keyed by component name                |
+| `ComponentStateFacade`  | Selectors helpers (e.g. `processingComponentName`) |
+| `ComponentStateEnum`    | Built-in state labels                              |
 
-### Provide the and NgRx ActionsSubject ComponentStateBuilder
+### Built-in states
 
 ```ts
+enum ComponentStateEnum {
+  Idle = 'idle',
+  Processing = 'processing',
+  Completed = 'completed',
+  Retry = 'retry',
+  Maximised = 'maximised',
+  Minimised = 'minimised',
+  Success = 'success',
+  Disabled = 'disabled',
+}
+```
+
+You can use these as-is or treat them as conventions for your app.
+
+### Transition modes
+
+After a valid transition updates store state:
+
+| Mode            | Builder method     | Behavior                                            |
+| --------------- | ------------------ | --------------------------------------------------- |
+| **passthrough** | `.passThrough()`   | Forward the original action to reducers/effects     |
+| **terminate**   | `.terminate()`     | Update UI state only; do **not** forward the action |
+| **transform**   | `.transformTo(fn)` | Dispatch a different action instead                 |
+
+Invalid transitions emit `componentStateTransitionBlocked` (no store state change).
+
+## Installation
+
+```bash
+yarn add ngrx-fsm @ngrx/store
+# or
+npm install ngrx-fsm @ngrx/store
+```
+
+Peer dependencies (see `package.json` for exact ranges): `@angular/core`, `@angular/common`, `@ngrx/store`.
+
+## Setup
+
+Replace NgRx’s `ActionsSubject` with `ComponentStateMachine` and register the feature reducer:
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { ActionsSubject, provideStore } from '@ngrx/store';
 import {
   COMPONENT_STATE_FEATURE_KEY,
   ComponentStateBuilder,
@@ -55,39 +100,203 @@ bootstrapApplication(AppComponent, {
     ComponentStateService,
     { provide: ActionsSubject, useClass: ComponentStateMachine },
   ],
-}).catch((err) => console.error(err));
+});
 ```
 
-### Fluent style builder setup for a given component
+> The machine must be provided as `ActionsSubject` so it can intercept actions before they reach the store.
+
+## Declare transitions
 
 ```ts
+import {
+  ComponentStateBuilder,
+  ComponentStateEnum,
+  ComponentStateService,
+} from 'ngrx-fsm';
+import * as UsersActions from './users.actions';
 
-// With the fluent builder, component states can be specified like this ...
+const componentName = 'UsersComponent';
 
 const componentStates = this.componentStateBuilder
-    .create('userApproval')
-    .forAction(actionTypes.loadUnapprovedUsers)
-    .fromState(ComponentStates.Idle)
-    .toState(ComponentStates.Processing
-        .passThrough()
-        .forAction(actionTypes.loadUnapprovedUsersSuccess)
-        .fromState(ComponentStates.Processing)
-        .toState(ComponentStates.Idle)
-        .passThrough()
-        .forAction(actionTypes.loadUnapprovedUsersError)
-        .fromState(ComponentStates.Processing)
-        .toState(ComponentStates.Idle)
-        .terminate()
-
-// the component uses an injected componentStateService to register its state transitions
+  .create(componentName)
+  .forAction(UsersActions.initUsers.type)
+  .fromState(ComponentStateEnum.Idle)
+  .toState(ComponentStateEnum.Processing)
+  .passThrough()
+  .forAction(UsersActions.loadUsersSuccess.type)
+  .fromState(ComponentStateEnum.Processing)
+  .toState(ComponentStateEnum.Completed)
+  .passThrough()
+  .forAction(UsersActions.loadUsersFailure.type)
+  .fromState(ComponentStateEnum.Processing)
+  .toState(ComponentStateEnum.Idle)
+  .passThrough()
+  .forAction(UsersActions.reIndexUsers.type)
+  .fromState(ComponentStateEnum.Completed)
+  .toState(ComponentStateEnum.Processing)
+  .passThrough()
+  .build();
 
 this.componentStateService.addComponentStates(componentStates);
 ```
 
-## Demo was a better approach
+Unregister when the component is destroyed:
 
-So, run showcase project on stackblitz WIP you can clone a repo then:
+```ts
+ngOnDestroy(): void {
+  this.componentStateService.removeComponentStates(componentName);
+}
+```
 
-Run `yarn start` to execute the showcase demo.
+### Builder API
 
-[//]: # 'So, here it state machine in action at: [Stackblitz Demo](https://stackblitz.com/edit/ng-met-antd-datepicker)'
+```ts
+create(name: string)
+withId(id: string | number)           // multi-instance machines
+disableWhenProcessing()               // advisory flag for UI
+showProgressBar(show: boolean)        // advisory flag for UI
+forAction(actionType: string)
+fromState(state: ComponentStateEnum)
+toState(state: ComponentStateEnum)
+passThrough() | terminate() | transformTo(fn)
+build()
+```
+
+Each `fromState` entry must end with `passThrough()`, `terminate()`, or `transformTo(...)`.
+
+**Multiple `fromState`s for the same action** — call `fromState` again without calling `forAction` again (calling `forAction` resets that action’s map):
+
+```ts
+.forAction(lockPanel.type)
+.fromState(ComponentStateEnum.Maximised)
+.toState(ComponentStateEnum.Disabled)
+.terminate()
+.fromState(ComponentStateEnum.Minimised)
+.toState(ComponentStateEnum.Disabled)
+.terminate()
+```
+
+### Initial state
+
+Default current state is `Idle` when unset. For UI that starts elsewhere (e.g. minimised panel), set state **after** registration — `addComponentStates()` clears any prior store entry for that name:
+
+```ts
+this.componentStateService.addComponentStates(states);
+this.componentStateService.updateComponentState(
+  componentName,
+  ComponentStateEnum.Minimised
+);
+```
+
+## Multi-instance machines (`withId`)
+
+When several instances share action types (e.g. three cards), give each a unique machine name **and** an id:
+
+```ts
+this.componentStateBuilder
+  .create(`UserCard-${id}`)
+  .withId(id)
+  .forAction(loadCard.type)
+  .fromState(ComponentStateEnum.Idle)
+  .toState(ComponentStateEnum.Processing)
+  .passThrough()
+  // ...
+  .build();
+```
+
+Dispatch actions with a matching `componentStateId`:
+
+```ts
+store.dispatch(loadCard({ componentStateId: id }));
+```
+
+Only the machine whose `withId` matches will transition.
+
+## Observe UI state
+
+```ts
+// Via facade
+this.facade.processingComponentName('UsersComponent'); // Observable<boolean>
+this.facade.componentState$; // full slice
+
+// Or select the slice directly
+this.store.select((s) => s.componentState?.['UsersComponent']);
+```
+
+Use that to drive progress bars, disabled buttons, expanded panels, etc.
+
+## Telemetry hooks
+
+Successful transitions dispatch `updateComponentState` with metadata:
+
+- `previousState`, `componentState`
+- `triggeredBy` (action type)
+- `mode`: `passthrough` | `terminate` | `transform` | …
+- `componentStateId` (when applicable)
+
+Blocked transitions dispatch `componentStateTransitionBlocked` (state unchanged).
+
+Listen with `@ngrx/effects` if you want logging, analytics, or a live debug panel (see the showcase app).
+
+## Demo
+
+This repo includes a **showcase** app with interactive use cases and a live FSM telemetry panel:
+
+| Route    | Demonstrates                                   |
+| -------- | ---------------------------------------------- |
+| `/users` | Idle → Processing → Completed                  |
+| `/cards` | Parallel machines + `withId`                   |
+| `/form`  | Retry + disable while processing               |
+| `/panel` | Maximised / Minimised / Disabled + `terminate` |
+
+```bash
+yarn
+yarn start
+# → http://localhost:4200
+```
+
+## How the machine works (summary)
+
+```text
+dispatch(action)
+       │
+       ▼
+ComponentStateMachine (ActionsSubject)
+       │
+       ├─ action not registered → forward as usual
+       │
+       └─ registered → for each interested component:
+              │
+              ├─ current state allows transition + id matches
+              │     → updateComponentState(...)
+              │     → passThrough | terminate | transform
+              │
+              └─ otherwise
+                    → componentStateTransitionBlocked(...)
+                    → original action not forwarded
+```
+
+## API exports
+
+```ts
+// Feature
+COMPONENT_STATE_FEATURE_KEY;
+componentStateReducer;
+
+// Actions
+updateComponentState;
+componentStateTransitionBlocked;
+passthroughComponentState;
+deleteComponentState;
+
+// Runtime
+ComponentStateBuilder;
+ComponentStateService;
+ComponentStateMachine;
+ComponentStateFacade;
+ComponentStateEnum;
+```
+
+## License
+
+See the repository root for license information.
