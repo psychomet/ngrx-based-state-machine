@@ -12,5 +12,5 @@ export const selectComponentStateState =
 
 export const selectComponentState = createSelector(
   selectComponentStateState,
-  (state: ComponentStateState) => state
+  (state: ComponentStateState) => state,
 );

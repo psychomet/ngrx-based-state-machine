@@ -22,12 +22,12 @@ export class UsersComponent {
   private readonly componentStateService = inject(ComponentStateService);
   private readonly componentStateBuilder = inject(ComponentStateBuilder);
   private readonly store = inject(
-    Store<{ componentState: ComponentStateState }>
+    Store<{ componentState: ComponentStateState }>,
   );
 
   processing$!: Observable<boolean>;
   users$: Observable<UserInterface[]> = this.store.pipe(
-    select(UsersSelectors.selectAllUsers)
+    select(UsersSelectors.selectAllUsers),
   );
 
   constructor() {
@@ -57,13 +57,13 @@ export class UsersComponent {
       map((state) => state.componentState),
       filter(
         (state: ComponentStateState) =>
-          state && state[componentName] !== undefined
+          state && state[componentName] !== undefined,
       ),
       map((state: ComponentStateState) => state[componentName]),
       map(
         (componentState: ComponentStateEnum) =>
-          componentState === ComponentStateEnum.Processing
-      )
+          componentState === ComponentStateEnum.Processing,
+      ),
     );
   }
 

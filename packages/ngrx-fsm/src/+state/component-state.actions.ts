@@ -17,7 +17,7 @@ export const updateComponentState = createAction(
     triggeredBy?: string;
     mode?: ComponentStateTransitionMode;
     componentStateId?: string | number;
-  }>()
+  }>(),
 );
 
 export const componentStateTransitionBlocked = createAction(
@@ -27,14 +27,14 @@ export const componentStateTransitionBlocked = createAction(
     previousState: ComponentStateEnum | string;
     triggeredBy: string;
     componentStateId?: string | number;
-  }>()
+  }>(),
 );
 
 export const passthroughComponentState = createAction(
-  '[ComponentState/API] Passthrough ComponentState'
+  '[ComponentState/API] Passthrough ComponentState',
 );
 
 export const deleteComponentState = createAction(
   '[ComponentState/API] Delete ComponentState',
-  props<{ componentName: string }>()
+  props<{ componentName: string }>(),
 );

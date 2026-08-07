@@ -7,7 +7,7 @@ import { ComponentStateEnum } from './component-state.enum';
 @Injectable()
 export class ComponentStateService {
   private readonly store = inject(
-    Store<{ componentState: ComponentStateState }>
+    Store<{ componentState: ComponentStateState }>,
   );
   public componentStates: any = {};
 
@@ -15,7 +15,7 @@ export class ComponentStateService {
     this.deleteComponentState(componentStateData.name);
     for (const [key, value] of Object.entries(componentStateData.states) as [
       string,
-      any
+      any,
     ][]) {
       if (!this.componentStates[key]) {
         this.componentStates[key] = {};
@@ -44,19 +44,19 @@ export class ComponentStateService {
 
   public updateComponentState(
     componentName: string,
-    componentState: ComponentStateEnum
+    componentState: ComponentStateEnum,
   ) {
     this.store.dispatch(
       ComponentStateActions.updateComponentState({
         componentName,
         componentState,
-      })
+      }),
     );
   }
 
   public deleteComponentState(componentName: string) {
     this.store.dispatch(
-      ComponentStateActions.deleteComponentState({ componentName })
+      ComponentStateActions.deleteComponentState({ componentName }),
     );
   }
 }

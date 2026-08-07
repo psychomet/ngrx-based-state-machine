@@ -25,7 +25,7 @@ import * as FormSelectors from '../+state/form.selectors';
 })
 export class FormComponent implements OnDestroy {
   private readonly store = inject(
-    Store<{ componentState: ComponentStateState }>
+    Store<{ componentState: ComponentStateState }>,
   );
   private readonly componentStateService = inject(ComponentStateService);
   private readonly componentStateBuilder = inject(ComponentStateBuilder);
@@ -43,12 +43,12 @@ export class FormComponent implements OnDestroy {
   readonly state$: Observable<ComponentStateEnum> = this.store.pipe(
     map(
       (state) =>
-        state.componentState?.[this.machineName] ?? ComponentStateEnum.Idle
-    )
+        state.componentState?.[this.machineName] ?? ComponentStateEnum.Idle,
+    ),
   );
   readonly error$ = this.store.select(FormSelectors.selectFormError);
   readonly lastSubmitted$ = this.store.select(
-    FormSelectors.selectLastSubmitted
+    FormSelectors.selectLastSubmitted,
   );
 
   constructor() {

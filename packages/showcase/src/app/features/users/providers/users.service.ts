@@ -24,7 +24,7 @@ export class UsersService {
   getUsers() {
     return this.httpClient
       .get<DummyJsonUsersResponse>(
-        'https://dummyjson.com/users?limit=3&select=id,firstName,lastName,username,email'
+        'https://dummyjson.com/users?limit=3&select=id,firstName,lastName,username,email',
       )
       .pipe(
         tap(() => console.log('fetch users action received')),
@@ -36,10 +36,10 @@ export class UsersService {
               last_name: user.lastName,
               username: user.username,
               email: user.email,
-            })
-          )
+            }),
+          ),
         ),
-        tap(() => console.log('fetch users action successful'))
+        tap(() => console.log('fetch users action successful')),
       );
   }
 }

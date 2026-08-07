@@ -20,9 +20,9 @@ export class FormEffects {
               });
             }
             return FormActions.submitFormSuccess({ name, email });
-          })
-        )
-      )
-    )
+          }),
+        ),
+      ),
+    ),
   );
 }

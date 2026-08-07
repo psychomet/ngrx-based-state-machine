@@ -5,12 +5,12 @@ export const initUsers = createAction('[Users Page] Init');
 
 export const loadUsersSuccess = createAction(
   '[Users/API] Load Users Success',
-  props<{ users: UsersEntity[] }>()
+  props<{ users: UsersEntity[] }>(),
 );
 
 export const loadUsersFailure = createAction(
   '[Users/API] Load Users Failure',
-  props<{ error: any }>()
+  props<{ error: any }>(),
 );
 
 export const reIndexUsers = createAction('[Users Page] ReIndex');

@@ -24,7 +24,7 @@ const reducer = createReducer(
     (state, { componentName, componentState }) => ({
       ...Object.assign({}, state),
       [componentName]: componentState,
-    })
+    }),
   ),
   on(ComponentStateActions.deleteComponentState, (state, { componentName }) => {
     const newState = Object.assign({}, state);
@@ -32,12 +32,12 @@ const reducer = createReducer(
       delete newState[componentName];
     }
     return newState;
-  })
+  }),
 );
 
 export function componentStateReducer(
   state: ComponentStateState | undefined,
-  action: Action
+  action: Action,
 ) {
   return reducer(state, action);
 }

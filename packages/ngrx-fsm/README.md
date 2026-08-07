@@ -184,7 +184,7 @@ Default current state is `Idle` when unset. For UI that starts elsewhere (e.g. m
 this.componentStateService.addComponentStates(states);
 this.componentStateService.updateComponentState(
   componentName,
-  ComponentStateEnum.Minimised
+  ComponentStateEnum.Minimised,
 );
 ```
 

@@ -16,5 +16,5 @@ export const panelReducer = createReducer(
   on(PanelActions.refreshPanelSuccess, (state, { quote }) => ({
     ...state,
     quote,
-  }))
+  })),
 );

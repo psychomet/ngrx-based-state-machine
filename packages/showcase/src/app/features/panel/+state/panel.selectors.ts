@@ -6,5 +6,5 @@ export const selectPanelState =
 
 export const selectPanelQuote = createSelector(
   selectPanelState,
-  (state) => state.quote
+  (state) => state.quote,
 );

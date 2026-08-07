@@ -14,60 +14,65 @@
   </p>
 
   @if ((state$ | async) === ComponentStateEnum.Success) {
-  <div class="alert alert-success">
-    <span>
-      Saved @if (lastSubmitted$ | async; as submitted) {
-      {{ submitted.name }} ({{ submitted.email }}) }
-    </span>
-  </div>
-  <button class="btn btn-outline w-fit" (click)="reset()">Reset form</button>
-  } @else {
-  <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
-    <label class="form-control w-full">
-      <span class="label-text mb-1">Name</span>
-      <input class="input input-bordered w-full" formControlName="name" />
-    </label>
-
-    <label class="form-control w-full">
-      <span class="label-text mb-1">Email</span>
-      <input class="input input-bordered w-full" formControlName="email" />
-      <span class="label-text-alt opacity-60 mt-1">
-        Tip: include “fail” in the email to force an error.
+    <div class="alert alert-success">
+      <span>
+        Saved
+        @if (lastSubmitted$ | async; as submitted) {
+          {{ submitted.name }} ({{ submitted.email }})
+        }
       </span>
-    </label>
-
-    <label class="label cursor-pointer justify-start gap-3">
-      <input type="checkbox" class="checkbox" formControlName="forceFail" />
-      <span class="label-text">Force API failure</span>
-    </label>
-
-    @if ((state$ | async) === ComponentStateEnum.Retry) {
-    <div class="alert alert-warning text-sm">
-      <span>{{ error$ | async }}</span>
     </div>
-    }
+    <button class="btn btn-outline w-fit" (click)="reset()">Reset form</button>
+  } @else {
+    <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="form-control w-full">
+        <span class="label-text mb-1">Name</span>
+        <input class="input input-bordered w-full" formControlName="name" />
+      </label>
 
-    <div class="flex gap-3">
+      <label class="form-control w-full">
+        <span class="label-text mb-1">Email</span>
+        <input class="input input-bordered w-full" formControlName="email" />
+        <span class="label-text-alt opacity-60 mt-1">
+          Tip: include “fail” in the email to force an error.
+        </span>
+      </label>
+
+      <label class="label cursor-pointer justify-start gap-3">
+        <input type="checkbox" class="checkbox" formControlName="forceFail" />
+        <span class="label-text">Force API failure</span>
+      </label>
+
       @if ((state$ | async) === ComponentStateEnum.Retry) {
-      <button
-        type="button"
-        class="btn btn-warning"
-        [disabled]="(state$ | async) === ComponentStateEnum.Processing"
-        (click)="retry()"
-      >
-        Retry submit
-      </button>
-      } @else {
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="(state$ | async) === ComponentStateEnum.Processing"
-      >
-        @if ((state$ | async) === ComponentStateEnum.Processing) { Submitting… }
-        @else { Submit }
-      </button>
+        <div class="alert alert-warning text-sm">
+          <span>{{ error$ | async }}</span>
+        </div>
       }
-    </div>
-  </form>
+
+      <div class="flex gap-3">
+        @if ((state$ | async) === ComponentStateEnum.Retry) {
+          <button
+            type="button"
+            class="btn btn-warning"
+            [disabled]="(state$ | async) === ComponentStateEnum.Processing"
+            (click)="retry()"
+          >
+            Retry submit
+          </button>
+        } @else {
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="(state$ | async) === ComponentStateEnum.Processing"
+          >
+            @if ((state$ | async) === ComponentStateEnum.Processing) {
+              Submitting…
+            } @else {
+              Submit
+            }
+          </button>
+        }
+      </div>
+    </form>
   }
 </div>

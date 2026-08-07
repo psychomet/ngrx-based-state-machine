@@ -51,19 +51,21 @@
     </button>
   </div>
 
-  @if ( (state$ | async) === ComponentStateEnum.Maximised || (state$ | async)
-  === ComponentStateEnum.Processing ) {
-  <div class="border border-base-300 rounded-box p-5 bg-base-200">
-    @if ((state$ | async) === ComponentStateEnum.Processing) {
-    <progress class="progress w-full mb-4"></progress>
-    }
-    <p class="text-lg leading-relaxed">{{ quote$ | async }}</p>
-  </div>
+  @if (
+    (state$ | async) === ComponentStateEnum.Maximised ||
+    (state$ | async) === ComponentStateEnum.Processing
+  ) {
+    <div class="border border-base-300 rounded-box p-5 bg-base-200">
+      @if ((state$ | async) === ComponentStateEnum.Processing) {
+        <progress class="progress w-full mb-4"></progress>
+      }
+      <p class="text-lg leading-relaxed">{{ quote$ | async }}</p>
+    </div>
   } @else if ((state$ | async) === ComponentStateEnum.Disabled) {
-  <div class="alert">
-    <span>Panel is locked. Unlock to interact again.</span>
-  </div>
+    <div class="alert">
+      <span>Panel is locked. Unlock to interact again.</span>
+    </div>
   } @else {
-  <div class="text-sm opacity-60">Panel is minimised.</div>
+    <div class="text-sm opacity-60">Panel is minimised.</div>
   }
 </div>

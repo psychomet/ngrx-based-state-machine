@@ -20,9 +20,9 @@ export class PanelEffects {
       ofType(PanelActions.refreshPanel),
       switchMap(() =>
         this.http
-          .get<{ quotes: DummyJsonQuote[] }>(
-            'https://dummyjson.com/quotes?limit=30'
-          )
+          .get<{
+            quotes: DummyJsonQuote[];
+          }>('https://dummyjson.com/quotes?limit=30')
           .pipe(
             map((response) => {
               const quote =
@@ -37,11 +37,11 @@ export class PanelEffects {
               of(
                 PanelActions.refreshPanelSuccess({
                   quote: 'Could not load quote. Try again.',
-                })
-              )
-            )
-          )
-      )
-    )
+                }),
+              ),
+            ),
+          ),
+      ),
+    ),
   );
 }

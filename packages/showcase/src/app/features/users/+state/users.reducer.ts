@@ -32,12 +32,15 @@ const reducer = createReducer(
     error: null,
   })),
   on(UsersActions.reIndexUsers, (state) =>
-    usersAdapter.setAll([], { ...state, loaded: false, error: null })
+    usersAdapter.setAll([], { ...state, loaded: false, error: null }),
   ),
   on(UsersActions.loadUsersSuccess, (state, { users }) =>
-    usersAdapter.setAll(users, { ...state, loaded: true })
+    usersAdapter.setAll(users, { ...state, loaded: true }),
   ),
-  on(UsersActions.loadUsersFailure, (state, { error }) => ({ ...state, error }))
+  on(UsersActions.loadUsersFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
 );
 
 export function usersReducer(state: UsersState | undefined, action: Action) {

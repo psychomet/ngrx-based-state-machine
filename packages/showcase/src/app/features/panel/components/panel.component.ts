@@ -24,7 +24,7 @@ import * as PanelSelectors from '../+state/panel.selectors';
 })
 export class PanelComponent implements OnDestroy {
   private readonly store = inject(
-    Store<{ componentState: ComponentStateState }>
+    Store<{ componentState: ComponentStateState }>,
   );
   private readonly componentStateService = inject(ComponentStateService);
   private readonly componentStateBuilder = inject(ComponentStateBuilder);
@@ -35,8 +35,8 @@ export class PanelComponent implements OnDestroy {
   readonly state$: Observable<ComponentStateEnum> = this.store.pipe(
     map(
       (state) =>
-        state.componentState?.[this.machineName] ?? ComponentStateEnum.Idle
-    )
+        state.componentState?.[this.machineName] ?? ComponentStateEnum.Idle,
+    ),
   );
   readonly quote$ = this.store.select(PanelSelectors.selectPanelQuote);
 
@@ -77,7 +77,7 @@ export class PanelComponent implements OnDestroy {
     this.componentStateService.addComponentStates(states);
     this.componentStateService.updateComponentState(
       this.machineName,
-      ComponentStateEnum.Minimised
+      ComponentStateEnum.Minimised,
     );
   }
 

@@ -40,10 +40,10 @@ export class TelemetryEffects {
               mode: mode ?? 'unknown',
               componentStateId,
             });
-          }
-        )
+          },
+        ),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
   trackBlocked$ = createEffect(
@@ -61,9 +61,9 @@ export class TelemetryEffects {
               mode: 'ignored',
               componentStateId,
             });
-          }
-        )
+          },
+        ),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 }

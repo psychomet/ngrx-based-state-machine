@@ -25,7 +25,7 @@ import { CardsEntity } from '../+state/cards.reducer';
 })
 export class CardsComponent implements OnDestroy {
   private readonly store = inject(
-    Store<{ componentState: ComponentStateState }>
+    Store<{ componentState: ComponentStateState }>,
   );
   private readonly componentStateService = inject(ComponentStateService);
   private readonly componentStateBuilder = inject(ComponentStateBuilder);
@@ -71,7 +71,7 @@ export class CardsComponent implements OnDestroy {
   state$(id: number): Observable<ComponentStateEnum> {
     const name = `UserCard-${id}`;
     return this.store.pipe(
-      map((state) => state.componentState?.[name] ?? ComponentStateEnum.Idle)
+      map((state) => state.componentState?.[name] ?? ComponentStateEnum.Idle),
     );
   }
 

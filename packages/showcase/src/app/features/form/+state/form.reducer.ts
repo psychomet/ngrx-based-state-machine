@@ -27,7 +27,7 @@ export const formReducer = createReducer(
       name,
       email,
       error: null,
-    })
+    }),
   ),
   on(FormActions.submitFormSuccess, (state, { name, email }) => ({
     ...state,
@@ -38,5 +38,5 @@ export const formReducer = createReducer(
     ...state,
     error,
   })),
-  on(FormActions.resetForm, () => initialFormState)
+  on(FormActions.resetForm, () => initialFormState),
 );

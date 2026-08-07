@@ -5,7 +5,7 @@ export const collapsePanel = createAction('[Panel] Collapse');
 export const refreshPanel = createAction('[Panel] Refresh');
 export const refreshPanelSuccess = createAction(
   '[Panel] Refresh Success',
-  props<{ quote: string }>()
+  props<{ quote: string }>(),
 );
 export const lockPanel = createAction('[Panel] Lock');
 export const unlockPanel = createAction('[Panel] Unlock');

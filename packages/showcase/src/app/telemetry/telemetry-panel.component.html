@@ -31,38 +31,42 @@
 
   <div class="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
     @if (telemetry.events().length === 0) {
-    <p class="text-xs opacity-60 px-1 py-6 text-center">
-      Interact with a use case to see transitions here.
-    </p>
-    } @else { @for (event of telemetry.events(); track event.id) {
-    <article
-      class="rounded-lg border border-base-200 bg-base-200/40 px-3 py-2 space-y-1"
-    >
-      <div class="flex items-center justify-between gap-2">
-        <span class="font-medium truncate">{{ event.useCase }}</span>
-        <span class="text-[10px] opacity-50 shrink-0">
-          {{ event.at | date : 'HH:mm:ss.SSS' }}
-        </span>
-      </div>
-      <div class="flex flex-wrap items-center gap-1.5">
-        <span class="badge badge-sm" [ngClass]="modeClass(event.mode)">
-          {{ event.mode }}
-        </span>
-        <span class="font-mono text-xs">
-          {{ event.from }}
-          <span class="opacity-50">→</span>
-          {{ event.to }}
-        </span>
-      </div>
-      <div class="text-xs opacity-70 truncate" [title]="event.triggeredBy">
-        {{ shortAction(event.triggeredBy) }}
-        <span class="opacity-50">· {{ event.componentName }}</span>
-        @if (event.componentStateId !== null && event.componentStateId !==
-        undefined) {
-        <span class="opacity-50">· id {{ event.componentStateId }}</span>
-        }
-      </div>
-    </article>
-    } }
+      <p class="text-xs opacity-60 px-1 py-6 text-center">
+        Interact with a use case to see transitions here.
+      </p>
+    } @else {
+      @for (event of telemetry.events(); track event.id) {
+        <article
+          class="rounded-lg border border-base-200 bg-base-200/40 px-3 py-2 space-y-1"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-medium truncate">{{ event.useCase }}</span>
+            <span class="text-[10px] opacity-50 shrink-0">
+              {{ event.at | date: 'HH:mm:ss.SSS' }}
+            </span>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="badge badge-sm" [ngClass]="modeClass(event.mode)">
+              {{ event.mode }}
+            </span>
+            <span class="font-mono text-xs">
+              {{ event.from }}
+              <span class="opacity-50">→</span>
+              {{ event.to }}
+            </span>
+          </div>
+          <div class="text-xs opacity-70 truncate" [title]="event.triggeredBy">
+            {{ shortAction(event.triggeredBy) }}
+            <span class="opacity-50">· {{ event.componentName }}</span>
+            @if (
+              event.componentStateId !== null &&
+              event.componentStateId !== undefined
+            ) {
+              <span class="opacity-50">· id {{ event.componentStateId }}</span>
+            }
+          </div>
+        </article>
+      }
+    }
   </div>
 </section>

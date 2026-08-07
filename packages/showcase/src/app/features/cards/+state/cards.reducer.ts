@@ -30,7 +30,7 @@ export const cardsReducer = createReducer(
     (state, { componentStateId }) => ({
       ...state,
       errors: { ...state.errors, [componentStateId]: null },
-    })
+    }),
   ),
   on(CardsActions.loadCardSuccess, (state, { componentStateId, user }) =>
     cardsAdapter.upsertOne(
@@ -38,8 +38,8 @@ export const cardsReducer = createReducer(
       {
         ...state,
         errors: { ...state.errors, [componentStateId]: null },
-      }
-    )
+      },
+    ),
   ),
   on(CardsActions.loadCardFailure, (state, { componentStateId, error }) => ({
     ...state,
@@ -48,5 +48,5 @@ export const cardsReducer = createReducer(
       [componentStateId]:
         error instanceof Error ? error.message : 'Failed to load user',
     },
-  }))
+  })),
 );

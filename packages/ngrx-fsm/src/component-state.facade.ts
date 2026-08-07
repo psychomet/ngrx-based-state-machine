@@ -19,7 +19,7 @@ export class ComponentStateFacade {
   //   select(ComponentStateSelectors.selectComponentStateLoaded)
   // );
   componentState$ = this.store.pipe(
-    select(ComponentStateSelectors.selectComponentState)
+    select(ComponentStateSelectors.selectComponentState),
   );
   // selectedComponentState$ = this.store.pipe(
   //   select(ComponentStateSelectors.selectEntity)
@@ -37,13 +37,13 @@ export class ComponentStateFacade {
     return this.componentState$.pipe(
       filter(
         (state: ComponentStateState) =>
-          state && state[componentName] !== undefined
+          state && state[componentName] !== undefined,
       ),
       map((state: ComponentStateState) => state[componentName]),
       map(
         (componentState: ComponentStateEnum) =>
-          componentState === ComponentStateEnum.Processing
-      )
+          componentState === ComponentStateEnum.Processing,
+      ),
     );
   }
 }

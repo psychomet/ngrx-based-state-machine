@@ -24,7 +24,7 @@ export class CardsEffects {
       mergeMap(({ componentStateId }) =>
         this.http
           .get<DummyJsonUser>(
-            `https://dummyjson.com/users/${componentStateId}?select=id,firstName,lastName,username,email`
+            `https://dummyjson.com/users/${componentStateId}?select=id,firstName,lastName,username,email`,
           )
           .pipe(
             map((user) => {
@@ -41,10 +41,10 @@ export class CardsEffects {
               });
             }),
             catchError((error) =>
-              of(CardsActions.loadCardFailure({ componentStateId, error }))
-            )
-          )
-      )
-    )
+              of(CardsActions.loadCardFailure({ componentStateId, error })),
+            ),
+          ),
+      ),
+    ),
   );
 }

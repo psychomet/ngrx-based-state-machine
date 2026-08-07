@@ -104,7 +104,7 @@ export class ComponentStateBuilder {
       for (const actionValue of Object.values(value)) {
         if (!actionValue.action && !actionValue.terminate) {
           throw new Error(
-            `The component state change for ${key} is missing a passthrough, transform, or terminate flag`
+            `The component state change for ${key} is missing a passthrough, transform, or terminate flag`,
           );
         }
       }

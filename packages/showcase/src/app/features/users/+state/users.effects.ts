@@ -15,13 +15,13 @@ export class UsersEffects {
       switchMap(() =>
         this.usersService
           .getUsers()
-          .pipe(map((users) => UsersActions.loadUsersSuccess({ users })))
+          .pipe(map((users) => UsersActions.loadUsersSuccess({ users }))),
       ),
       catchError((error) => {
         console.error('Error', error);
         return of(UsersActions.loadUsersFailure({ error }));
-      })
-    )
+      }),
+    ),
   );
 
   reIndex$ = createEffect(() =>
@@ -30,12 +30,12 @@ export class UsersEffects {
       switchMap(() =>
         this.usersService
           .getUsers()
-          .pipe(map((users) => UsersActions.loadUsersSuccess({ users })))
+          .pipe(map((users) => UsersActions.loadUsersSuccess({ users }))),
       ),
       catchError((error) => {
         console.error('Error', error);
         return of(UsersActions.loadUsersFailure({ error }));
-      })
-    )
+      }),
+    ),
   );
 }

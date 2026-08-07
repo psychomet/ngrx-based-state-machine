@@ -44,7 +44,7 @@ export class ComponentStateMachine extends ActionsSubject {
         let actionForwarded = false;
         for (const [key, value] of Object.entries(stateMachine) as [
           string,
-          any
+          any,
         ][]) {
           // for each entry check what the current state of the component is
           const currentState = componentState[key]
@@ -56,11 +56,11 @@ export class ComponentStateMachine extends ActionsSubject {
             const mode = stateTransition.terminate
               ? 'terminate'
               : stateTransition.action ===
-                ComponentStateActions.passthroughComponentState
-              ? 'passthrough'
-              : stateTransition.action
-              ? 'transform'
-              : 'unknown';
+                  ComponentStateActions.passthroughComponentState
+                ? 'passthrough'
+                : stateTransition.action
+                  ? 'transform'
+                  : 'unknown';
 
             super.next(
               ComponentStateActions.updateComponentState({
@@ -70,7 +70,7 @@ export class ComponentStateMachine extends ActionsSubject {
                 triggeredBy: action.type,
                 mode,
                 componentStateId: value.id ?? action.componentStateId,
-              })
+              }),
             );
             if (stateTransition.action) {
               // process the action by either transforming to another action or passing through
@@ -98,7 +98,7 @@ export class ComponentStateMachine extends ActionsSubject {
                 previousState: currentState,
                 triggeredBy: action.type,
                 componentStateId: value.id ?? action.componentStateId,
-              })
+              }),
             );
           }
         }

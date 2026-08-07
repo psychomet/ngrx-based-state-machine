@@ -6,10 +6,10 @@ export const selectFormState =
 
 export const selectFormError = createSelector(
   selectFormState,
-  (state) => state.error
+  (state) => state.error,
 );
 
 export const selectLastSubmitted = createSelector(
   selectFormState,
-  (state) => state.lastSubmitted
+  (state) => state.lastSubmitted,
 );

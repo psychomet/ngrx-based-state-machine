@@ -8,7 +8,7 @@ const { selectEntities } = cardsAdapter.getSelectors();
 
 export const selectCardEntities = createSelector(
   selectCardsState,
-  selectEntities
+  selectEntities,
 );
 
 export const selectCardById = (id: number) =>
