@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.4...ngrx-fsm-v1.1.0) (2026-07-28)
+
+
+### Bug Fixes
+
+* restore flat ESLint config and clear lint errors ([ae74e9e](https://github.com/psychomet/ngrx-based-state-machine/commit/ae74e9e66d62078d7c77375cb087116fa9f1e90a))
+
+
+### Features
+
+* **showcase:** add cards, form, and panel FSM demos ([022a76c](https://github.com/psychomet/ngrx-based-state-machine/commit/022a76c0571214f014a6b58f49d75e1bad274ca5))
+* **showcase:** add live FSM telemetry panel ([596da30](https://github.com/psychomet/ngrx-based-state-machine/commit/596da30135aa196e09010ccffb8d841160aed3c8))
+
 ## [1.0.4](https://github.com/psychomet/ngrx-based-state-machine/compare/ngrx-fsm-v1.0.3...ngrx-fsm-v1.0.4) (2023-04-25)
 
 ### Bug Fixes
