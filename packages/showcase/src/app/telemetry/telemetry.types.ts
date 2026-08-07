@@ -18,16 +18,19 @@ export interface TelemetryEvent {
 }
 
 export function resolveUseCase(componentName: string): string {
-  if (componentName === 'UsersComponent') {
+  if (componentName === 'UsersComponent' || componentName === 'SignalUsers') {
     return 'List lifecycle';
   }
-  if (componentName.startsWith('UserCard-')) {
+  if (
+    componentName.startsWith('UserCard-') ||
+    componentName.startsWith('SignalUserCard-')
+  ) {
     return 'Multi-instance cards';
   }
-  if (componentName === 'FormComponent') {
+  if (componentName === 'FormComponent' || componentName === 'SignalForm') {
     return 'Form submit';
   }
-  if (componentName === 'PanelComponent') {
+  if (componentName === 'PanelComponent' || componentName === 'SignalPanel') {
     return 'Expandable panel';
   }
   return componentName;

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "ngrx-fsm": ["packages/ngrx-fsm/src/index.ts"]
+      "ngrx-fsm": ["packages/ngrx-fsm/src/index.ts"],
+      "ngrx-fsm-signal": ["packages/ngrx-fsm-signal/src/index.ts"]
     },
     "strict": false,
     "noUncheckedSideEffectImports": false,

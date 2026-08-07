@@ -8,21 +8,33 @@
   </header>
 
   <div class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-8">
-    <aside class="xl:w-72 shrink-0">
-      <ul class="menu bg-base-100 rounded-box shadow-sm p-2">
-        @for (link of links; track link.path) {
-        <li>
-          <a
-            [routerLink]="link.path"
-            routerLinkActive="active"
-            class="flex flex-col items-start gap-0.5 py-3"
-          >
-            <span class="font-medium">{{ link.label }}</span>
-            <span class="text-xs opacity-60 font-normal">{{ link.hint }}</span>
-          </a>
-        </li>
-        }
-      </ul>
+    <aside class="xl:w-72 shrink-0 space-y-4">
+      @for (section of sections; track section.title) {
+        <div class="bg-base-100 rounded-box shadow-sm p-2">
+          <div class="px-3 pt-2 pb-1">
+            <p class="text-sm font-semibold uppercase tracking-wide">
+              {{ section.title }}
+            </p>
+            <p class="text-xs opacity-60">{{ section.subtitle }}</p>
+          </div>
+          <ul class="menu p-0">
+            @for (link of section.links; track link.path) {
+              <li>
+                <a
+                  [routerLink]="link.path"
+                  routerLinkActive="active"
+                  class="flex flex-col items-start gap-0.5 py-3"
+                >
+                  <span class="font-medium">{{ link.label }}</span>
+                  <span class="text-xs opacity-60 font-normal">{{
+                    link.hint
+                  }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </aside>
 
     <main class="flex-1 min-w-0">

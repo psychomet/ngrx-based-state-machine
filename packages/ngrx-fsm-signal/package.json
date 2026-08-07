@@ -1,0 +1,30 @@
+{
+  "name": "ngrx-fsm-signal",
+  "version": "0.0.0-semantic-release",
+  "keywords": [
+    "angular",
+    "ngrx",
+    "ngrx-signals",
+    "fsm",
+    "finite-state-machine",
+    "signal-store"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psychomet/ngrx-based-state-machine.git",
+    "directory": "packages/ngrx-fsm-signal"
+  },
+  "publishConfig": {
+    "@psychomet:registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@ngrx/signals": "^21.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
