@@ -86,7 +86,9 @@ export class SignalUsersComponent implements OnDestroy {
     this.http
       .get<{
         users: DummyJsonUser[];
-      }>('https://dummyjson.com/users?limit=3&select=id,firstName,lastName,username,email')
+      }>(
+        'https://dummyjson.com/users?limit=3&select=id,firstName,lastName,username,email',
+      )
       .subscribe({
         next: (response) => {
           this.users.set(
